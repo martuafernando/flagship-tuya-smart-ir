@@ -1,4 +1,4 @@
-import { getRequestSign } from '../get/get-sign.js';
+import { getRequestSign } from './get-sign.js';
 import { config } from '../config.js';
 
 export async function get(query = {}, method = 'GET', url = '') {
