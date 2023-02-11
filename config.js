@@ -7,5 +7,4 @@ export const config = {
   accessKey: process.env.ACCESS_KEY,
   secretKey: process.env.SECRET_KEY,
   deviceId: process.env.DEVICE_ID,
-  token : '',
 };

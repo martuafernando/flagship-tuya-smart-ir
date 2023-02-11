@@ -4,7 +4,7 @@ import * as crypto from 'crypto'
 import { encryptStr } from '../helper.js'
 import { default as axios } from 'axios'
 
-export class IotCore{
+export class InfraredCommonAPI{
 
   static async init(){
     this.httpClient = axios.create({
@@ -14,50 +14,50 @@ export class IotCore{
     this.token = await this.getToken()
   }
 
-  static getDeviceStatus(deviceId){
+  static getRemoteControlList(infrared_id){
     const query = {}
     const method = 'GET'
-    const url = `/v1.0/iot-03/devices/${deviceId}/status`
+    const url = `/v2.0/infrareds/${infrared_id}/remotes`
     return this.send(query, method, url)
   }
 
-  static getDeviceSpesification(deviceId){
+  static getCategoryList(infrared_id){
     const query = {}
     const method = 'GET'
-    const url = `/v1.2/iot-03/devices/${deviceId}/specification`
+    const url = `/v2.0/infrareds/${infrared_id}/categories`
     return this.send(query, method, url)
   }
 
-  static getDeviceInformation(deviceId){
+  static getBrandList(infrared_id, category_id){
     const query = {}
     const method = 'GET'
-    const url = `/v1.1/iot-03/devices/${deviceId}`
+    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands?countryCode=ID`
     return this.send(query, method, url)
   }
 
-  static getDeviceFunctions(deviceId){
+  static getKeysOfRemoteControl(infrared_id, remote_id){
     const query = {}
     const method = 'GET'
-    const url = `/v1.0/iot-03/devices/${deviceId}/functions`
+    const url = `/v2.0/infrareds/${infrared_id}/remotes/${remote_id}/keys`
     return this.send(query, method, url)
   }
 
-  static getCategoryList(){
+  static getRemoteControlIndexes(infrared_id, category_id, brand_id){
     const query = {}
     const method = 'GET'
-    const url = `/v1.0/iot-03/device-categories`
+    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands/${brand_id}/remote-indexs`
     return this.send(query, method, url)
   }
 
-  static getCategoryFunctions(categoryId){
+  static postKeyCommand(body, infrared_id, remote_id){
     const query = {}
-    const method = 'GET'
-    const url = `/v1.0/iot-03/categories/${categoryId}/functions`
-    return this.send(query, method, url)
+    const method = 'POST'
+    const url = `/v2.0/infrareds/${infrared_id}/remotes/${remote_id}/raw/command`
+    return this.send(query, method, url, body)
   }
 
   static async send(query = {}, method = 'GET', url = '', body = {}) {
-    const reqHeaders = await this.getRequestSign(url, method, {}, query)
+    const reqHeaders = await this.getRequestSign(url, method, {}, query, body)
   
     const { data } = await this.httpClient.request({
       method,
