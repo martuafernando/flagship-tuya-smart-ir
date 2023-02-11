@@ -1,4 +1,6 @@
 import * as dotenv from 'dotenv';
+import { default as axios } from 'axios';
+
 dotenv.config();
 
 export const config = {
@@ -6,5 +8,10 @@ export const config = {
   accessKey: process.env.ACCESS_KEY,
   secretKey: process.env.SECRET_KEY,
   deviceId: process.env.DEVICE_ID,
-  token : ''
+  token : '',
+
+  httpClient: axios.create({
+    baseURL: process.env.HOST,
+    timeout: 5 * 1e3,
+  })
 };

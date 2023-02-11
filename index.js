@@ -1,18 +1,26 @@
-import { default as axios } from 'axios';
 import { config } from './config.js';
+
 import { getToken } from './get/get-token.js';
-
 import { getDeviceInformation } from './get/get-device-information.js';
-
-const httpClient = axios.create({
-  baseURL: config.host,
-  timeout: 5 * 1e3,
-});
+import { getDeviceSpesification } from './get/get-device-spesification.js';
+import { getDeviceFunctions } from './get/get-device-functions.js';
+import { getCategoryFunctions } from './get/get-category-functions.js';
+import { getCategoryList } from './get/get-category-list.js';
+import { getDeviceStatus } from './get/get-device-status.js';
 
 async function main() {
-  config.token = await getToken(httpClient);
-  const data = await getDeviceInformation(httpClient, config.deviceId);
-  console.log('fetch success: ', data);
+  config.token = await getToken();
+
+  console.log('getDeviceInformation:: ', await getDeviceInformation(config.deviceId), '\n');
+  console.log('getDeviceSpesification:: ', await getDeviceSpesification(config.deviceId), '\n');
+  console.log('getDeviceFunctions:: ', await getDeviceFunctions(config.deviceId), '\n');
+  console.log('getCategoryFunctions:: ', await getCategoryFunctions((await getDeviceFunctions(config.deviceId)).result.category), '\n');
+  console.log('getCategoryList:: ', await getCategoryList(), '\n');
+  console.log('getDeviceStatus:: ', await getDeviceStatus(config.deviceId), '\n');
+  console.log('getDeviceStatus:: ', await getDeviceStatus(config.deviceId), '\n');
+  
+
+  
 }
 
 main().catch(err => {

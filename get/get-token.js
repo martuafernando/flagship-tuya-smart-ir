@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import { config } from '../config.js';
 import { encryptStr } from '../helper.js';
 
-export async function getToken(httpClient) {
+export async function getToken() {
   const method = 'GET';
   const timestamp = Date.now().toString();
   const signUrl = '/v1.0/token?grant_type=1';
@@ -16,7 +16,7 @@ export async function getToken(httpClient) {
     client_id: config.accessKey,
     sign: await encryptStr(signStr, config.secretKey),
   };
-  const { data: login } = await httpClient.get('/v1.0/token?grant_type=1', { headers });
+  const { data: login } = await config.httpClient.get('/v1.0/token?grant_type=1', { headers });
   if (!login || !login.success) {
     throw Error(`fetch failed: ${login.msg}`);
   }
