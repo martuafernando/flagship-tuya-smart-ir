@@ -1,15 +1,31 @@
 import { IotCore } from './iot-core/IotCore.js'
 import { config } from './config.js'
 import { InfraredCommonAPI } from './ir-control-hub/InfraredCommonAPI.js'
+import { InfraredACAPI } from './ir-control-hub/InfraredACAPI.js'
 
 async function main() {
-  await IotCore.init()
   await InfraredCommonAPI.init()
+  await InfraredACAPI.init()
 
+  const {remote_index, remote_id, category_id} = (await InfraredCommonAPI.getRemoteControlList(config.deviceId)).result[0]
+  console.log({remote_index, remote_id, category_id})
+  const keysOfRemoteContorl = (await InfraredCommonAPI.getKeysOfRemoteControl(config.deviceId, remote_id)).result
+  const key = keysOfRemoteContorl.key_list
+  console.log(key)
 
-  console.log(await IotCore.getDeviceInformation(config.deviceId))
+  // Trying turn ON AC
+  // console.log(await InfraredCommonAPI.postStandardCommand({remote_index, category_id, key: 'PowerOn'}, config.deviceId, remote_id))
+  console.log(await InfraredCommonAPI.postStandardCommand({remote_index, category_id, key: 'PowerOff'}, config.deviceId, remote_id))
+  
+
+  // console.log(await InfraredACAPI.getAirConditionerStatus(config.deviceId, remote_id))
+
+  // await InfraredACAPI.postSingleCommand({remote_index, category_id, code: 'temp', value: 26}, config.deviceId)
+
+  // console.log(await IotCore.getDeviceInformation(config.deviceId))
 
   // console.log((await InfraredCommonAPI.getRemoteControlIndexes(config.deviceId, 1, 1077)).result.remote_index_list)
+  
 
   // console.log((await InfraredCommonAPI.getKeysOfRemoteControl(
   //   config.deviceId,
