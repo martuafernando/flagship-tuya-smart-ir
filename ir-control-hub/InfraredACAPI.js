@@ -4,7 +4,7 @@ import * as crypto from 'crypto'
 import { encryptStr } from '../helper.js'
 import { default as axios } from 'axios'
 
-export class InfraredCommonAPI{
+export class InfraredACAPI{
 
   static async init(){
     this.httpClient = axios.create({
@@ -14,55 +14,22 @@ export class InfraredCommonAPI{
     this.token = await this.getToken()
   }
 
-  static getRemoteControlList(infrared_id){
+  static getAirConditionerStatus(infrared_id, remote_id){
     const query = {}
     const method = 'GET'
-    const url = `/v2.0/infrareds/${infrared_id}/remotes`
+    const url = `/v2.0/infrareds/${infrared_id}/remotes/${remote_id}/ac/status`
     return this.send(query, method, url)
   }
 
-  static getCategoryList(infrared_id){
-    const query = {}
-    const method = 'GET'
-    const url = `/v2.0/infrareds/${infrared_id}/categories`
-    return this.send(query, method, url)
-  }
-
-  static getBrandList(infrared_id, category_id){
-    const query = {}
-    const method = 'GET'
-    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands?countryCode=ID`
-    return this.send(query, method, url)
-  }
-
-  static getKeysOfRemoteControl(infrared_id, remote_id){
-    const query = {}
-    const method = 'GET'
-    const url = `/v2.0/infrareds/${infrared_id}/remotes/${remote_id}/keys`
-    return this.send(query, method, url)
-  }
-
-  static getRemoteControlIndexes(infrared_id, category_id, brand_id){
-    const query = {}
-    const method = 'GET'
-    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands/${brand_id}/remote-indexs`
-    return this.send(query, method, url)
-  }
-
-  static postKeyCommand({remote_index, category_id, key_id, key}, infrared_id, remote_id){
+  static postSingleCommand({remote_index, category_id, code, value}, infrared_id){
     const query = {}
     const method = 'POST'
-    const url = `/v2.0/infrareds/${infrared_id}/remotes/${remote_id}/raw/command`
-
-    return this.send(query, method, url, {remote_index, category_id, key_id, key})
-  }
-
-  static postStandardCommand({category_id, key, remote_index}, infrared_id, remote_id){
-    const query = {}
-    const method = 'POST'
-    const url = `/v2.0/infrareds/${infrared_id}/remotes/${remote_id}/command`
-    
-    return this.send(query, method, url, {category_id, key, remote_index})
+    const url = `/v2.0/infrareds/${infrared_id}/air-conditioners/testing/command`
+    if (value){
+      return this.send(query, method, url, {remote_index, category_id, code, value})
+    } else {
+      return this.send(query, method, url, {remote_index, category_id, code})
+    }
   }
 
   static async send(query = {}, method = 'GET', url = '', body = {}) {
