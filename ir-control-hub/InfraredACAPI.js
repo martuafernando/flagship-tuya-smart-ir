@@ -32,6 +32,17 @@ export class InfraredACAPI{
     }
   }
 
+  static postControlAirConditioner({remote_index, category_id, code, value}, infrared_id, remote_id){
+    const query = {}
+    const method = 'POST'
+    const url = `/v2.0/infrareds/${infrared_id}/air-conditioners/${remote_id}/command`
+    if (value){
+      return this.send(query, method, url, {remote_index, category_id, code, value})
+    } else {
+      return this.send(query, method, url, {remote_index, category_id, code})
+    }
+  }
+
   static async send(query = {}, method = 'GET', url = '', body = {}) {
     const reqHeaders = await this.getRequestSign(url, method, {}, query, body)
   

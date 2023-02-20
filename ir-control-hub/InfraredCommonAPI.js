@@ -28,10 +28,10 @@ export class InfraredCommonAPI{
     return this.send(query, method, url)
   }
 
-  static getBrandList(infrared_id, category_id){
+  static getBrandList(infrared_id, category_id, countryCode = 'ID'){
     const query = {}
     const method = 'GET'
-    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands?countryCode=ID`
+    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands?countryCode=${countryCode}`
     return this.send(query, method, url)
   }
 
@@ -46,6 +46,13 @@ export class InfraredCommonAPI{
     const query = {}
     const method = 'GET'
     const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands/${brand_id}/remote-indexs`
+    return this.send(query, method, url)
+  }
+
+  static getInfraredCodeLibraryInformation({infrared_id, category_id, brand_id, remote_index}){
+    const query = {}
+    const method = 'GET'
+    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands/${brand_id}/remotes/${remote_index}/rules`
     return this.send(query, method, url)
   }
 
