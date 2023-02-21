@@ -45,8 +45,8 @@ export class InfraredACAPI{
 
   static async send(query = {}, method = 'GET', url = '', body = {}) {
     const reqHeaders = await this.getRequestSign(url, method, {}, query, body)
-  
-    const { data } = await this.httpClient.request({
+
+    const { status, data } = await this.httpClient.request({
       method,
       data: body,
       params: {},
@@ -55,7 +55,7 @@ export class InfraredACAPI{
     })
   
     if (!data || !data.success) {
-      throw Error(`request api failed: ${data.msg}`)
+      throw Error(new Error(`${data.msg}||${status}`))
     }else{
       return data
     }
