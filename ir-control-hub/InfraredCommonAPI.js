@@ -29,9 +29,9 @@ export class InfraredCommonAPI{
   }
 
   static getBrandList(infrared_id, category_id, countryCode = 'ID'){
-    const query = {}
+    const query = { countryCode }
     const method = 'GET'
-    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands?countryCode=${countryCode}`
+    const url = `/v2.0/infrareds/${infrared_id}/categories/${category_id}/brands`
     return this.send(query, method, url)
   }
 
