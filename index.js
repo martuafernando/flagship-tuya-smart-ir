@@ -40,6 +40,17 @@ async function getKey(infrared_id, remote_id) {
   }
 }
 
+async function getStatus(infrared_id, remote_id) {
+  await InfraredACAPI.init()
+  const response = await InfraredACAPI.getAirConditionerStatus(infrared_id, remote_id)
+  return {
+    success: response.success,
+    data: response.result
+  }
+}
+
+
+
 async function sendCommand(infrared_id, remote_id, code, value) {
   await InfraredACAPI.init()
   const { remote_index, category_id } = await init(infrared_id, remote_id)
@@ -50,4 +61,4 @@ async function sendCommand(infrared_id, remote_id, code, value) {
   }
 }
 
-export { getAllBrand, getAllRemote, getKey, sendCommand }
+export { getAllBrand, getAllRemote, getKey, sendCommand, getStatus }
