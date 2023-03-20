@@ -1,0 +1,24 @@
+sensor:
+  - platform: rest
+    name: JSON remote
+    json_attributes_path: "$.data.[0]"
+    json_attributes:
+      - area_id
+      - brand_id
+      - brand_name
+      - category_id
+      - operator_id
+      - remote_id
+      - remote_index
+      - remote_name
+    resource: http://192.168.243.128:3000/002102102cf432241bcb/remote
+    value_template: "{{ value_json.data[0].remote_id }}"
+
+rest_command:
+  send_command:
+    url: http://{{ ip }}:{{ port }}/{{ infrared_id }}/{{ remote_id }}/command
+    method: POST
+    headers:
+      accept: "application/json, text/html"
+    payload: "code={{ command }}&value={{ measure }}"
+    content_type: "application/x-www-form-urlencoded"
