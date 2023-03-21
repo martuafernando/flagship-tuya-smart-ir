@@ -1,18 +1,13 @@
 sensor:
   - platform: rest
     name: JSON remote
-    json_attributes_path: "$.data.[0]"
+    json_attributes_path: "$.data"
     json_attributes:
-      - area_id
-      - brand_id
-      - brand_name
-      - category_id
-      - operator_id
       - remote_id
-      - remote_index
       - remote_name
-    resource: http://192.168.243.128:3000/002102102cf432241bcb/remote
-    value_template: "{{ value_json.data[0].remote_id }}"
+    resource: http://192.168.100.13:3000/002102102cf432241bcb/remote
+    scan_interval: 3600 # Update every hour
+    value_template: "{{ value_json.data | map(attribute='remote_name') | list }}"
 
 rest_command:
   send_command:
