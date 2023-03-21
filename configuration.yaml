@@ -1,0 +1,39 @@
+sensor:
+  - platform: rest
+    name: remote name # RESTful Sensor to show all remote name
+    json_attributes_path: "$.data"
+    json_attributes:
+      - remote_name
+    resource: http://192.168.100.13:3000/002102102cf432241bcb/remote
+    scan_interval: 3600 # Update every hour
+    value_template: "{{ value_json.data | map(attribute='remote_name') | list }}"
+
+  - platform: rest
+    name: remote id # RESTful Sensor to show all remote id
+    json_attributes_path: "$.data"
+    json_attributes:
+      - remote_id
+    resource: http://192.168.100.13:3000/002102102cf432241bcb/remote
+    scan_interval: 3600 # Update every hour
+    value_template: "{{ value_json.data | map(attribute='remote_id') | list }}"
+
+# Rest Command
+rest_command:
+  send_command:
+    url: http://{{ ip }}:{{ port }}/{{ infrared_id }}/{{ remote_id }}/command
+    method: POST
+    headers:
+      accept: "application/json, text/html"
+    payload: "code={{ command }}&value={{ measure }}"
+    content_type: "application/x-www-form-urlencoded"
+
+# For Call the Service
+service: rest_command.send_command
+data: {
+  "ip": "192.168.100.13",
+  "port": "3000",
+  "infrared_id": "002102102cf432241bcb",
+  "remote_id": "eb642529bc3f1b461doheq",
+  "command": "power",
+  "measure": 1,
+}
