@@ -1,0 +1,62 @@
+# Show Entities in Dashboard
+type: entities
+entities:
+  - entity: input_select.remote_id
+  - entity: input_select.command
+  - entity: input_text.value
+  - entity: script.send
+
+# Script "Send"
+service: rest_command.send_command
+data:
+  ip: 192.168.100.13
+  port: '3000'
+  infrared_id: 002102102cf432241bcb
+
+# REST Sensor
+sensor:
+  - platform: rest
+    name: remotes name # RESTful Sensor to show all remote name
+    json_attributes_path: "$.data"
+    json_attributes:
+      - remote_name
+    resource: http://192.168.100.13:3000/002102102cf432241bcb/remote
+    scan_interval: 3600 # Update every hour
+    value_template: "{{ value_json.data | map(attribute='remote_name') | list }}"
+
+  - platform: rest
+    name: remote id # RESTful Sensor to show all remote id
+    json_attributes_path: "$.data"
+    json_attributes:
+      - remote_id
+    resource: http://192.168.100.13:3000/002102102cf432241bcb/remote
+    scan_interval: 3600 # Update every hour
+
+# Input Text
+input_text:
+  value:
+    initial: ""
+
+# Input Select
+input_select:
+  remote_id:
+    name: Remote ID
+    options:
+      - "eb642529bc3f1b461doheq"
+      - "ebe5d64f8a2fddb45ddkz8"
+  command:
+    name: Command
+    options:
+      - "power"
+      - "mode"
+      - "wind"
+
+# REST Command
+rest_command:
+  send_command:
+    url: http://{{ ip }}:{{ port }}/{{ infrared_id }}/{{ states.input_select.remote_id.state }}/command
+    method: POST
+    headers:
+      accept: "application/json, text/html"
+    payload: "code={{ states.input_select.command.state }}&value={{ states.input_text.value.state }}"
+    content_type: "application/x-www-form-urlencoded"
